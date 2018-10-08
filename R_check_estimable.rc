@@ -1,0 +1,20 @@
+library(Rniftilib)
+Ind <- read.table ("./List of Individuals.txt", header=F, sep="", colClasses = "character")
+NoI <- nrow(Ind)
+Quest <- array(0,c(NoI,1))
+
+
+for (i in 1:NoI) {
+Head <- nifti.image.read(paste("./",Ind[i,1],"/SessionB/EPI_short_MID/swea/con_0010.nii", sep=""), read_data=0)
+Quest [i,1] <- substr(Head$descrip, start=20, stop=30)
+
+}
+List <- Quest[,1] != "unestimable"
+dim(List) <- c(NoI,1)
+row.names(List) <- Ind[,1]
+row.names(Quest) <- Ind[,1]
+table(List)
+table(Quest)
+write.table(Quest, file= "./List of Information.txt", col.names=F, row.names=T, quote=F)
+write.table(List, file="./List of Individuals with information regarding unestimable.txt", col.names=F, row.names=T, quote=F)
+
